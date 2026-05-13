@@ -7,11 +7,6 @@ const styles = `
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 1.75rem 1.5rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 1rem;
-    background: #ffffff;
-    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
 
   .stat-counter__value {
@@ -20,12 +15,11 @@ const styles = `
     font-variant-numeric: tabular-nums;
     line-height: 1;
     letter-spacing: -0.03em;
-    color: #0f172a;
   }
 
   .stat-counter__label {
     font-size: 0.95rem;
-    color: #64748b;
+    opacity: 0.7;
   }
 `
 
