@@ -3,12 +3,16 @@ import type { UseCountUpOptions } from '../types/stat-counter'
 import { easings, prefersReducedMotion } from '../utils'
 
 /**
- * Animates a number from `start` to `end` over `duration` ms using the given
- * easing curve. Visibility is tracked with an `IntersectionObserver` on the
+ * Animates a number from `start` to `end` using the given easing curve over
+ * `duration` ms. Visibility is tracked with an `IntersectionObserver` on the
  * returned `ref`'s element: the animation begins when the element first
  * crosses the ≥30% visibility threshold, after which the observer
- * disconnects (one-shot, no re-trigger on scroll-back). Returns `end`
- * immediately if the user prefers reduced motion.
+ * disconnects (one-shot, no re-trigger on scroll-back). The animation
+ * re-runs if any input changes (e.g. a designer edits `end` in the Webflow
+ * canvas).
+ *
+ * Returns `end` immediately, without waiting for intersection, when either
+ * the user prefers reduced motion or `duration <= 0`.
  *
  * @returns `{ value, ref }` - the current animated number and a ref to
  * attach to the element whose visibility gates the animation.
@@ -23,7 +27,7 @@ import { easings, prefersReducedMotion } from '../utils'
  * return <div ref={ref}>{formatNumber(value)}</div>
  */
 export function useCountUp({ start, end, duration, easing }: UseCountUpOptions) {
-  const [reduced] = useState(prefersReducedMotion)
+  const instant = prefersReducedMotion() || duration <= 0
   const [animatedValue, setAnimatedValue] = useState(start)
   const [inView, setInView] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
@@ -47,7 +51,7 @@ export function useCountUp({ start, end, duration, easing }: UseCountUpOptions) 
   }, [])
 
   useEffect(() => {
-    if (reduced || !inView) return
+    if (instant || !inView) return
 
     const ease = easings[easing]
     const animationStart = performance.now()
@@ -64,7 +68,7 @@ export function useCountUp({ start, end, duration, easing }: UseCountUpOptions) 
     return function cleanup() {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current)
     }
-  }, [start, end, duration, easing, reduced, inView])
+  }, [start, end, duration, easing, instant, inView])
 
-  return { value: reduced ? end : animatedValue, ref }
+  return { value: instant ? end : animatedValue, ref }
 }
