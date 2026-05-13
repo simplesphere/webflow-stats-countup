@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "bun test src",
     "webflow:share": "webflow library share"
   },
   "dependencies": {
