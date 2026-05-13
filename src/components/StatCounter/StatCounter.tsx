@@ -44,12 +44,12 @@ export function StatCounter({
   locale = 'en-US',
   className,
 }: StatCounterProps) {
-  const value = useCountUp({ start, end, duration, easing })
+  const { value, ref } = useCountUp({ start, end, duration, easing })
   const ariaLabel = `${prefix}${formatNumber(end, locale)}${suffix} ${label}`
   const rootClass = className ? `stat-counter ${className}` : 'stat-counter'
 
   return (
-    <div className={rootClass} role="group" aria-label={ariaLabel}>
+    <div ref={ref} className={rootClass} role="group" aria-label={ariaLabel}>
       <style>{styles}</style>
       <div className="stat-counter__value" aria-hidden="true">
         {prefix}
