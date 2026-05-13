@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# animated-stats
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Webflow code component library: a `StatCounter` that animates a number from `start` to `end` on mount, with locale-aware formatting and reduced-motion support.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+bun install
+bun dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Opens a Vite playground at http://localhost:5173 with three sample stat counters. Use this for iterating on the component before publishing.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Publishing to Webflow
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The component is shared into Webflow as a code library named `animated-stats`. This is handled by the **Webflow CLI** (`@webflow/webflow-cli`), installed as a dev dependency. The CLI reads `webflow.json`, bundles all `*.webflow.tsx` files, and uploads them to your Workspace.
+
+1. Generate a Workspace API token in Webflow: **Workspace settings → Apps & Integrations → Workspace API Access → Generate API token**. Give it `Code components: Read and write`.
+2. Copy the token into a local `.env`:
+   ```
+   cp .env.example .env
+   # paste token after WEBFLOW_API_TOKEN=
+   ```
+3. Publish:
+   ```
+   bun run webflow:share
+   ```
+   This runs `webflow library share`, which compiles the components and uploads them. The CLI auto-reads `WEBFLOW_API_TOKEN` from `.env`.
+
+After publishing, designers see **Stat Counter** under the **Animated Stats** group in their Library / Components panel in the Webflow Designer.
+
+### Useful CLI commands
+
+| Command                              | Purpose                                          |
+|--------------------------------------|--------------------------------------------------|
+| `bun run webflow:share`              | Build and publish the library to your Workspace. |
+| `bunx webflow library share --dev`   | Publish a development build with source maps.    |
+| `bunx webflow library share --verbose` | Verbose output for debugging.                  |
+| `bunx webflow --help`                | Full CLI reference.                              |
+
+## Component props
+
+| Prop       | Type             | Default        | Designer-editable |
+|------------|------------------|----------------|-------------------|
+| `end`      | `number`         | -              | yes               |
+| `start`    | `number`         | `0`            | yes               |
+| `label`    | `string`         | -              | yes               |
+| `prefix`   | `string`         | `''`           | yes               |
+| `suffix`   | `string`         | `''`           | yes               |
+| `duration` | `number` (ms)    | `1800`         | yes               |
+| `easing`   | `'easeOutExpo' \| 'easeOutQuart' \| 'linear'` | `'easeOutExpo'` | no |
+| `locale`   | `string` (BCP47) | `'en-US'`      | no                |
+| `className`| `string`         | -              | no                |
+
+## Project structure
+
 ```
+src/
+├── App.tsx                       # demo playground
+├── main.tsx                      # vite entry
+├── index.css                     # demo-only styles
+├── components/
+│   └── StatCounter/
+│       ├── StatCounter.tsx          # React component (ships its own styles)
+│       ├── StatCounter.webflow.tsx  # Webflow declareComponent adapter
+│       └── index.ts
+├── hooks/
+│   └── use-count-up.ts           # animation hook (runs on every frame via requestAnimationFrame)
+├── types/
+│   └── stat-counter.ts
+└── utils/
+    └── index.ts                  # formatNumber, easings, prefersReducedMotion
+```
+
+## Notes
+
+- Webflow renders each component inside its own Shadow DOM, so the component ships its CSS as an inline `<style>` block in `StatCounter.tsx`. Global stylesheets do not reach it.
+- Webflow's bundler is webpack and does not honor the `@/` tsconfig alias. Files inside `src/components/`, `src/hooks/`, `src/utils/` use relative imports for that reason. The playground entry (`main.tsx`) and `App.tsx` still use `@/`.
+- `prefers-reduced-motion: reduce` short-circuits the animation; the final value renders immediately.
