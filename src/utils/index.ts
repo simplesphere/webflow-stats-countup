@@ -31,7 +31,8 @@ export const easings: Record<Easing, (t: number) => number> = {
 
 /**
  * Reads the user's OS-level "reduce motion" preference via `matchMedia`.
- * Returns `true` when motion should be avoided.
+ * Returns `true` when motion should be avoided. Returns `false` during SSR
+ * (no `window`), so the server output assumes animation is allowed.
  *
  * @example
  * if (prefersReducedMotion()) {
@@ -39,5 +40,6 @@ export const easings: Record<Easing, (t: number) => number> = {
  * }
  */
 export function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined') return false
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
