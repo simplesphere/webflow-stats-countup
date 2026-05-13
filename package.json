@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "bun test src",
+    "test:e2e": "playwright test",
     "webflow:share": "webflow library share"
   },
   "dependencies": {
