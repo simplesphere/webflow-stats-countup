@@ -1,4 +1,4 @@
-import type { Easing } from '@/types/stat-counter'
+import type { Easing } from '../types/stat-counter'
 
 /**
  * Formats a number as a locale-aware integer string (no decimals).

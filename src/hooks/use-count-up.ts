@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import type { UseCountUpOptions } from '@/types/stat-counter'
-import { easings, prefersReducedMotion } from '@/utils'
+import type { UseCountUpOptions } from '../types/stat-counter'
+import { easings, prefersReducedMotion } from '../utils'
 
 /**
  * Animates a number from `start` to `end` over `duration` ms using the given

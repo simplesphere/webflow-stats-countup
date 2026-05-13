@@ -1,6 +1,6 @@
-import type { StatCounterProps } from '@/types/stat-counter'
-import { useCountUp } from '@/hooks/use-count-up'
-import { formatNumber } from '@/utils'
+import type { StatCounterProps } from '../../types/stat-counter'
+import { useCountUp } from '../../hooks/use-count-up'
+import { formatNumber } from '../../utils'
 
 const styles = `
   .stat-counter {
