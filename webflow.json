@@ -1,0 +1,17 @@
+{
+  "library": {
+    "id": "b0c65d8b-0222-463f-8c54-d6224edc2935",
+    "name": "animated-stats",
+    "description": "Animated count-up stats",
+    "components": [
+      "src/components/**/*.webflow.tsx"
+    ]
+  },
+  "telemetry": {
+    "global": {
+      "allowTelemetry": true,
+      "lastPrompted": 1778686091990,
+      "version": "1.21.0"
+    }
+  }
+}
