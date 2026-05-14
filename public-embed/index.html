@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>animated-stats / embed</title>
+    <style>
+      :root {
+        font-family:
+          ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+        color: #0f172a;
+        background: #f8fafc;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4rem 1.5rem;
+        box-sizing: border-box;
+      }
+      main {
+        width: min(960px, 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      h1 {
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin: 0;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+      }
+      .stats > [data-stat-counter] {
+        padding: 1.75rem 1.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        background: #ffffff;
+      }
+      pre {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 1.25rem 1.5rem;
+        border-radius: 0.75rem;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        line-height: 1.55;
+      }
+      a {
+        color: #2563eb;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>animated-stats / embed</h1>
+
+      <div class="stats">
+        <div data-stat-counter data-end="342" data-label="sensitive files"></div>
+        <div data-stat-counter data-end="40815" data-label="links scanned"></div>
+        <div
+          data-stat-counter
+          data-end="1284"
+          data-prefix="$"
+          data-suffix="+"
+          data-label="saved per month"
+        ></div>
+      </div>
+
+      <section>
+        <h2>Usage</h2>
+        <pre><code>&lt;div data-stat-counter data-end="40815" data-label="links scanned"&gt;&lt;/div&gt;
+&lt;div data-stat-counter data-end="342" data-label="sensitive files"&gt;&lt;/div&gt;
+&lt;div data-stat-counter data-end="1284" data-prefix="$" data-suffix="+" data-label="saved per month"&gt;&lt;/div&gt;
+
+&lt;script src="https://&lt;your-vercel-host&gt;/stat-counter.js" defer&gt;&lt;/script&gt;</code></pre>
+        <p>
+          Supported <code>data-*</code> attributes: <code>data-end</code>
+          (required), <code>data-start</code>, <code>data-label</code>,
+          <code>data-prefix</code>, <code>data-suffix</code>,
+          <code>data-duration</code>, <code>data-easing</code>,
+          <code>data-locale</code>.
+        </p>
+      </section>
+    </main>
+
+    <script src="./stat-counter.js" defer></script>
+  </body>
+</html>
